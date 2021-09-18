@@ -47,31 +47,6 @@ class CenterFragment4 : Fragment() {
         val button_delete = root.findViewById<Button>(R.id.button_delete)
         val button_logoff = root.findViewById<Button>(R.id.button_logoff)
         val button_about = root.findViewById<Button>(R.id.button_about)
-        val textview_userid = root.findViewById<TextView>(R.id.textview_userid)
-        val textview_username = root.findViewById<TextView>(R.id.textview_oldusername)
-
-        //提取ID
-        val PREF_FILE_NAME = "user_info"
-        val User_ID = "user_id"
-        val pref = getActivity()?.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
-        val user_id = pref?.getString(User_ID, "").toString()
-        textview_userid.setText("ID：$user_id")
-        //得到昵称
-        thread {
-            val result = service.GetNameById(user_id)
-            try {
-                val response = result.execute()
-                val user_name = response.body()!!.string()
-                val mainHandler = Handler(Looper.getMainLooper())
-                mainHandler.post {
-                    textview_username.setText("您好，$user_name")
-                }
-            } catch (e: IOException) {
-                Looper.prepare()
-                Toast.makeText(activity, "网络无法连接", Toast.LENGTH_LONG).show()
-                Looper.loop()
-            }
-        }
 
         button_modifypwd.setOnClickListener {
             val intent = Intent(activity, ModifyPasswordActivity::class.java)
@@ -150,5 +125,35 @@ class CenterFragment4 : Fragment() {
                 .show()
         }
         return root
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val textview_userid = view?.findViewById<TextView>(R.id.textview_userid)
+        val textview_username = view?.findViewById<TextView>(R.id.textview_oldusername)
+
+        //提取ID
+        val PREF_FILE_NAME = "user_info"
+        val User_ID = "user_id"
+        val pref = getActivity()?.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
+        val user_id = pref?.getString(User_ID, "").toString()
+        textview_userid?.setText("ID：$user_id")
+        //得到昵称
+        thread {
+            val result = service.GetNameById(user_id)
+            try {
+                val response = result.execute()
+                val user_name = response.body()!!.string()
+                val mainHandler = Handler(Looper.getMainLooper())
+                mainHandler.post {
+                    textview_username?.setText("您好，$user_name")
+                }
+            } catch (e: IOException) {
+                Looper.prepare()
+                Toast.makeText(activity, "网络无法连接", Toast.LENGTH_LONG).show()
+                Looper.loop()
+            }
+        }
     }
 }
