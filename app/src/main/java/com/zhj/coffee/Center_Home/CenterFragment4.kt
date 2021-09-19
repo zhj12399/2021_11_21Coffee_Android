@@ -117,8 +117,9 @@ class CenterFragment4 : Fragment() {
                 .setTitle("关于咖啡世界")
                 .setMessage("一款可记录咖啡因的网站\n所有数据均来自于公布数据\n" +
                         "由于个人体质等条件不同，数据仅供参考\n" +
-                        "作者：zhj12399\n" +
-                        "作者邮箱：zhj727534681@163.com"
+                        "作者:zhj12399\n" +
+                        "作者邮箱:zhj727534681@163.com\n"+
+                        "网站地址:zhj12399.cn:9000"
                 )
                 .setPositiveButton("确定") { dialog, which ->
                 }
