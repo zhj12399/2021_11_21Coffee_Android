@@ -7,6 +7,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -44,12 +45,16 @@ class CenterFragment1 : Fragment() {
         val textview_todaytext1 = root.findViewById<TextView>(R.id.textview_todaytext1)
         val textview_todaytext2 = root.findViewById<TextView>(R.id.textview_todaytext2)
         val textview_todaytext3 = root.findViewById<TextView>(R.id.textview_todaytext3)
+        val surfaceview = root.findViewById<SurfaceView>(R.id.surfaceview)
 
         //提取ID
         val PREF_FILE_NAME = "user_info"
         val User_ID = "user_id"
         val pref = getActivity()?.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
         val user_id = pref?.getString(User_ID, "").toString()
+
+        val surfaceholder = surfaceview.holder
+        surfaceholder.addCallback()
 
         thread {
             val nowtime = Date()
@@ -61,6 +66,7 @@ class CenterFragment1 : Fragment() {
                 val response_today = result_today.execute()
                 val response_now = result_now.execute()
                 val caffeinelist: JSONArray = JSON.parseArray(response_today.body()!!.string())
+                val caffeinenow: JSONArray = JSON.parseArray(response_now.body()!!.string())
 
                 var sumcaffeine = 0.0
                 for (i in 0 until caffeinelist.size) { //遍历JSONArray
@@ -68,8 +74,11 @@ class CenterFragment1 : Fragment() {
                     val caffee_caffeine = caffee.getFloat("caffeine")
                     sumcaffeine += caffee_caffeine
                 }
-                val mainHandler = Handler(Looper.getMainLooper())
 
+                caffeinenow.getJSONObject(0)
+
+
+                val mainHandler = Handler(Looper.getMainLooper())
                 mainHandler.post {
                     textview_todaytext2.setText("今日饮用杯数：" + caffeinelist.size + "杯")
                     textview_todaytext3.setText("今日累计摄入：" + sumcaffeine + "/400mg")
