@@ -1,15 +1,14 @@
 package com.zhj.coffee.Center_Home
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.SurfaceView
-import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.alibaba.fastjson.JSON
@@ -23,6 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.util.*
 import kotlin.concurrent.thread
+import android.view.SurfaceHolder.Callback as SurfaceHolderCallback
 
 class CenterFragment1 : Fragment() {
 
@@ -50,11 +50,41 @@ class CenterFragment1 : Fragment() {
         //提取ID
         val PREF_FILE_NAME = "user_info"
         val User_ID = "user_id"
-        val pref = getActivity()?.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
+        val pref = activity?.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
         val user_id = pref?.getString(User_ID, "").toString()
 
         val surfaceholder = surfaceview.holder
-        surfaceholder.addCallback()
+        val paint =Paint()
+        val callback = object:SurfaceHolder.Callback{
+            override fun surfaceCreated(p0: SurfaceHolder) {
+                thread {
+                    val canvas = surfaceholder.lockCanvas()
+
+                    if (canvas != null) {
+                        canvas.drawColor(Color.WHITE)
+                        //绘制坐标轴
+                        paint.setColor(Color.BLACK);
+                        canvas.drawText("O", 20F, 220F, paint);
+
+                        paint.setColor(Color.BLACK);
+                        canvas.drawLine(10F, 10F, 10F, 480F, paint)
+                        canvas.drawText("Y", 20F, 30F, paint)
+
+                        paint.setColor(Color.WHITE);
+                        canvas.drawLine(0F, 240F, 320F, 240F, paint);
+                        canvas.drawText("X", 300F, 260F, paint);
+                    }
+                    surfaceholder.unlockCanvasAndPost(canvas);
+                }
+            }
+
+            override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun surfaceDestroyed(p0: SurfaceHolder) {
+            }
+        }
+        surfaceholder.addCallback(callback)
 
         thread {
             val nowtime = Date()
