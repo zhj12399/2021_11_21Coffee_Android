@@ -10,16 +10,20 @@
         <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/activity_modify_password.xml" value="0.32971014492753625" />
         <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/activity_register.xml" value="0.22407407407407406" />
         <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/caffeine_list.xml" value="0.33" />
-        <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/fragment_center1.xml" value="0.2669706180344478" />
+        <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/fragment_center1.xml" value="0.3333333333333333" />
         <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/fragment_center2.xml" value="0.2669706180344478" />
         <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/fragment_center3.xml" value="0.2669706180344478" />
         <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/fragment_center4.xml" value="0.33" />
         <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/fragment_first_start_app.xml" value="0.2669706180344478" />
         <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/fragment_modify_password.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_center1.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/fragment_center2.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_center4.xml" value="0.12760416666666666" />
+        <entry key="app/src/main/res/layout/fragment_first_start_app.xml" value="0.12760416666666666" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

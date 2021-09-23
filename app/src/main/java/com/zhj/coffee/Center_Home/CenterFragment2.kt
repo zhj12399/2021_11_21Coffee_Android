@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -23,11 +22,9 @@ import com.zhj.coffee.R
 import com.zhj.coffee.entity.BaseUrl
 import com.zhj.coffee.entity.Caffeine
 import com.zhj.coffee.webservice.CaffeineService
-import com.zhj.coffee.webservice.PeopleService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
-import java.time.ZoneOffset
 import kotlin.concurrent.thread
 
 class CenterFragment2 : Fragment(), CaffeineListAdapter.CaffeineListClickListener {
@@ -107,7 +104,9 @@ class CenterFragment2 : Fragment(), CaffeineListAdapter.CaffeineListClickListene
         MaterialAlertDialogBuilder(activity!!)
             .setTitle("详情")
             .setMessage(
-                CaffeineList[currentIndex].caffeine.brand + " " + CaffeineList[currentIndex].caffeine.type + "杯"
+                CaffeineList[currentIndex].caffeine.brand + " " + CaffeineList[currentIndex].caffeine.type + " " +
+                        CaffeineList[currentIndex].caffeine.size + "杯\n饮用了" +CaffeineList[currentIndex].caffeine.percent +
+                        "杯\n共计咖啡因"+ CaffeineList[currentIndex].caffeine.caffeine+"mg"
             )
             .setPositiveButton("确定") { dialog, which ->
             }
