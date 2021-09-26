@@ -28,12 +28,14 @@ class CenterFragment4 : Fragment() {
 
     lateinit var retrofit: Retrofit
     lateinit var service: PeopleService
+    var user_id = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_center4, container, false)
+
 
         //初始化网络控件
         retrofit = Retrofit.Builder().baseUrl(BaseUrl.baseurl)
@@ -77,6 +79,17 @@ class CenterFragment4 : Fragment() {
                     editor?.putString(User_ID, "")
                     editor?.apply()
 
+                    thread {
+                        val result = service.DeletePeopleById(user_id)
+                        try {
+                            result.execute()
+                        } catch (e: IOException) {
+                            Looper.prepare()
+                            Toast.makeText(activity, "网络无法连接", Toast.LENGTH_LONG).show()
+                            Looper.loop()
+                        }
+                    }
+
                     Toast.makeText(activity, "成功删除账户，欢迎再次使用", Toast.LENGTH_LONG).show()
                     val intent = Intent(activity, LoginActivity::class.java)
                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -115,11 +128,12 @@ class CenterFragment4 : Fragment() {
         button_about.setOnClickListener {
             MaterialAlertDialogBuilder(activity!!)
                 .setTitle("关于咖啡世界")
-                .setMessage("一款可记录咖啡因的网站\n所有数据均来自于公布数据\n" +
-                        "由于个人体质等条件不同，数据仅供参考\n" +
-                        "作者:zhj12399\n" +
-                        "作者邮箱:zhj727534681@163.com\n"+
-                        "网站地址:zhj12399.cn:9000"
+                .setMessage(
+                    "一款可记录咖啡因的网站\n所有数据均来自于公布数据\n" +
+                            "由于个人体质等条件不同，数据仅供参考\n" +
+                            "作者:zhj12399\n" +
+                            "作者邮箱:zhj727534681@163.com\n" +
+                            "网站地址:zhj12399.cn:9000"
                 )
                 .setPositiveButton("确定") { dialog, which ->
                 }
@@ -138,7 +152,7 @@ class CenterFragment4 : Fragment() {
         val PREF_FILE_NAME = "user_info"
         val User_ID = "user_id"
         val pref = getActivity()?.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
-        val user_id = pref?.getString(User_ID, "").toString()
+        user_id = pref?.getString(User_ID, "").toString()
         textview_userid?.setText("ID：$user_id")
         //得到昵称
         thread {

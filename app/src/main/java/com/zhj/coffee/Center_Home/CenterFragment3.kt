@@ -79,8 +79,8 @@ class CenterFragment3 : Fragment() {
                     LastMonthSum += caffee_caffeine
                 }
 
-                val LastWeekAvg = String.format("%.2f", LastWeekSum / 7)
-                val LastMonthAvg = String.format("%.2f", LastMonthSum / 30)
+                val LastWeekAvg = String.format("%.2f", LastWeekSum / 7.0)
+                val LastMonthAvg = String.format("%.2f", LastMonthSum / 30.0)
                 val mainHandler = Handler(Looper.getMainLooper())
                 mainHandler.post {
                     textview_weektext1?.setText("本周一共饮用：" + LastWeekSum + "mg")

@@ -29,4 +29,7 @@ interface PeopleService {
         @Query("id") user_id: String,
         @Query("name") newname: String
     ): Call<ResponseBody>
+
+    @POST("People/deletePeopleById")
+    fun DeletePeopleById(@Query("id") user_id: String): Call<ResponseBody>
 }

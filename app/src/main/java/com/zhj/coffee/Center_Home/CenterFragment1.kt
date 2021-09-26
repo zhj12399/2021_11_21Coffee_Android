@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
+import com.alibaba.fastjson.JSONObject
 import com.zhj.coffee.R
 import com.zhj.coffee.entity.BaseUrl
 import com.zhj.coffee.webservice.CaffeineService
@@ -54,27 +55,26 @@ class CenterFragment1 : Fragment() {
         val user_id = pref?.getString(User_ID, "").toString()
 
         val surfaceholder = surfaceview.holder
-        val paint =Paint()
-        val callback = object:SurfaceHolder.Callback{
+        val paint = Paint()
+        val callback = object : SurfaceHolder.Callback {
             override fun surfaceCreated(p0: SurfaceHolder) {
                 thread {
                     val canvas = surfaceholder.lockCanvas()
-
                     if (canvas != null) {
                         canvas.drawColor(Color.WHITE)
+
                         //绘制坐标轴
-                        paint.setColor(Color.BLACK);
-                        canvas.drawText("O", 20F, 220F, paint);
+                        paint.setColor(Color.BLACK)
+                        canvas.drawText("O", 4F, 605F, paint)
+                        //纵坐标
+                        canvas.drawLine(10F, 10F, 10F, 600F, paint)
+                        canvas.drawText("咖啡因(mg)", 20F, 30F, paint)
+                        //横坐标
+                        canvas.drawLine(10F, 600F, 1000F, 600F, paint)
+                        canvas.drawText("时间", 1000F, 605F, paint)
 
-                        paint.setColor(Color.BLACK);
-                        canvas.drawLine(10F, 10F, 10F, 480F, paint)
-                        canvas.drawText("Y", 20F, 30F, paint)
-
-                        paint.setColor(Color.WHITE);
-                        canvas.drawLine(0F, 240F, 320F, 240F, paint);
-                        canvas.drawText("X", 300F, 260F, paint);
                     }
-                    surfaceholder.unlockCanvasAndPost(canvas);
+                    surfaceholder.unlockCanvasAndPost(canvas)
                 }
             }
 
@@ -91,12 +91,13 @@ class CenterFragment1 : Fragment() {
             val nowtimestr =
                 (nowtime.year + 1900).toString() + "-" + (nowtime.month + 1).toString() + "-" + nowtime.date
             val result_today = service.GetTodayCaffeineRecord(user_id, nowtimestr)
-            val result_now = service.GetCaffeineRecordById(user_id)
+            val result_now = service.GetStateById(user_id)
             try {
                 val response_today = result_today.execute()
                 val response_now = result_now.execute()
                 val caffeinelist: JSONArray = JSON.parseArray(response_today.body()!!.string())
-                val caffeinenow: JSONArray = JSON.parseArray(response_now.body()!!.string())
+                val caffeinenow: JSONObject =
+                    JSON.parse(response_now.body()!!.string()) as JSONObject
 
                 var sumcaffeine = 0.0
                 for (i in 0 until caffeinelist.size) { //遍历JSONArray
@@ -105,13 +106,16 @@ class CenterFragment1 : Fragment() {
                     sumcaffeine += caffee_caffeine
                 }
 
-                caffeinenow.getJSONObject(0)
-
+                val start_time = caffeinenow.getTimestamp("time").time
+                val start_caffeine = caffeinenow.getFloat("caffeine")
+                val delta_time = (nowtime.time - start_time) / 1000.0 / 3600.0
+                val now_caffeine = start_caffeine * Math.pow(0.5, delta_time / 4.0)
 
                 val mainHandler = Handler(Looper.getMainLooper())
                 mainHandler.post {
+                    textview_todaytext1.setText("当前体内咖啡因量："+String.format("%.2f",now_caffeine)+"mg")
                     textview_todaytext2.setText("今日饮用杯数：" + caffeinelist.size + "杯")
-                    textview_todaytext3.setText("今日累计摄入：" + sumcaffeine + "/400mg")
+                    textview_todaytext3.setText("今日累计摄入：" + String.format("%.2f",sumcaffeine) + "/400mg")
                 }
             } catch (e: IOException) {
                 Looper.prepare()
