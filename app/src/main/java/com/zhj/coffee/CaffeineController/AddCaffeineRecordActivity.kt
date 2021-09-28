@@ -85,7 +85,7 @@ class AddCaffeineRecordActivity : AppCompatActivity() {
                 this, { view, selectyear, selectmonth, selectday ->
                     select_year = selectyear
                     select_month = selectmonth
-                    select_day = selectday
+                    select_day = selectday        c
                     textview_date.setText(select_year.toString() + "年" + (select_month + 1).toString() + "月" + select_day + "日")
                 }, select_year, select_month, select_day
             ).show()
