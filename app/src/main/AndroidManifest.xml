@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Coffee">
         <activity
+            android:name=".CaffeineController.AddCaffeineRecordActivity"
+            android:exported="true" />
+        <activity
             android:name=".Login_Register.ModifyNameActivity"
             android:exported="true" />
         <activity

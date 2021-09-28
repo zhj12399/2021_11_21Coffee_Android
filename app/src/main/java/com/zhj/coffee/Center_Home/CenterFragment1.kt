@@ -1,6 +1,7 @@
 package com.zhj.coffee.Center_Home
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
@@ -8,12 +9,15 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.*
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import android.widget.TextView
 import android.widget.Toast
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
+import com.zhj.coffee.CaffeineController.AddCaffeineRecordActivity
+import com.zhj.coffee.Login_Register.LoginActivity
 import com.zhj.coffee.R
 import com.zhj.coffee.entity.BaseUrl
 import com.zhj.coffee.webservice.CaffeineService
@@ -47,6 +51,7 @@ class CenterFragment1 : Fragment() {
         val textview_todaytext2 = root.findViewById<TextView>(R.id.textview_todaytext2)
         val textview_todaytext3 = root.findViewById<TextView>(R.id.textview_todaytext3)
         val surfaceview = root.findViewById<SurfaceView>(R.id.surfaceview)
+        val button_addcaffeinerecord = root.findViewById<Button>(R.id.button_addcaffeinerecord)
 
         //提取ID
         val PREF_FILE_NAME = "user_info"
@@ -122,6 +127,11 @@ class CenterFragment1 : Fragment() {
                 Toast.makeText(activity, "网络无法连接", Toast.LENGTH_LONG).show()
                 Looper.loop()
             }
+        }
+
+        button_addcaffeinerecord.setOnClickListener {
+            val intent = Intent(activity, AddCaffeineRecordActivity::class.java)
+            activity?.startActivity(intent)
         }
         return root
     }

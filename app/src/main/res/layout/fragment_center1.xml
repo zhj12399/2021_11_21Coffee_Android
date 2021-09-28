@@ -82,13 +82,13 @@
             android:id="@+id/button_addcaffeinerecord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="确定修改"
+            android:text="新增数据"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.913" />
+            app:layout_constraintVertical_bias="0.92" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
