@@ -100,28 +100,32 @@ class CenterFragment1 : Fragment() {
             try {
                 val response_today = result_today.execute()
                 val response_now = result_now.execute()
-                val caffeinelist: JSONArray = JSON.parseArray(response_today.body()!!.string())
-                val caffeinenow: JSONObject =
-                    JSON.parse(response_now.body()!!.string()) as JSONObject
 
-                var sumcaffeine = 0.0
-                for (i in 0 until caffeinelist.size) { //遍历JSONArray
-                    val caffee = caffeinelist.getJSONObject(i)
-                    val caffee_caffeine = caffee.getFloat("caffeine")
-                    sumcaffeine += caffee_caffeine
+                if(response_today.body()!!.toString().isNotEmpty()){
+                    val caffeinelist: JSONArray = JSON.parseArray(response_today.body()!!.string())
+                    val caffeinenow: JSONObject =
+                        JSON.parse(response_now.body()!!.string()) as JSONObject
+
+                    var sumcaffeine = 0.0
+                    for (i in 0 until caffeinelist.size) { //遍历JSONArray
+                        val caffee = caffeinelist.getJSONObject(i)
+                        val caffee_caffeine = caffee.getFloat("caffeine")
+                        sumcaffeine += caffee_caffeine
+                    }
+
+                    val start_time = caffeinenow.getTimestamp("time").time
+                    val start_caffeine = caffeinenow.getFloat("caffeine")
+                    val delta_time = (nowtime.time - start_time) / 1000.0 / 3600.0
+                    val now_caffeine = start_caffeine * Math.pow(0.5, delta_time / 4.0)
+
+                    val mainHandler = Handler(Looper.getMainLooper())
+                    mainHandler.post {
+                        textview_todaytext1.setText("当前体内咖啡因量："+String.format("%.2f",now_caffeine)+"mg")
+                        textview_todaytext2.setText("今日饮用杯数：" + caffeinelist.size + "杯")
+                        textview_todaytext3.setText("今日累计摄入：" + String.format("%.2f",sumcaffeine) + "/400mg")
+                    }
                 }
 
-                val start_time = caffeinenow.getTimestamp("time").time
-                val start_caffeine = caffeinenow.getFloat("caffeine")
-                val delta_time = (nowtime.time - start_time) / 1000.0 / 3600.0
-                val now_caffeine = start_caffeine * Math.pow(0.5, delta_time / 4.0)
-
-                val mainHandler = Handler(Looper.getMainLooper())
-                mainHandler.post {
-                    textview_todaytext1.setText("当前体内咖啡因量："+String.format("%.2f",now_caffeine)+"mg")
-                    textview_todaytext2.setText("今日饮用杯数：" + caffeinelist.size + "杯")
-                    textview_todaytext3.setText("今日累计摄入：" + String.format("%.2f",sumcaffeine) + "/400mg")
-                }
             } catch (e: IOException) {
                 Looper.prepare()
                 Toast.makeText(activity, "网络无法连接", Toast.LENGTH_LONG).show()

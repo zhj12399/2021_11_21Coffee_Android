@@ -21,4 +21,7 @@ interface CaffeineService {
 
     @POST("Caffeine/getStateById/{user_id}")
     fun GetStateById(@Path("user_id") user_id: String): Call<ResponseBody>
+
+    @POST("Caffeine/AddCaffeineRecord")
+    fun AddCaffeineRecord(): Call<ResponseBody>
 }
