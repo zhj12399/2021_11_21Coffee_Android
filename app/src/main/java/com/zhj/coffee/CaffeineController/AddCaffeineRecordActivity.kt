@@ -2,19 +2,39 @@ package com.zhj.coffee.CaffeineController
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.os.Looper
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zhj.coffee.Center_Home.CenterActivity
-import com.zhj.coffee.MainActivity
+import com.zhj.coffee.Login_Register.LoginActivity
 import com.zhj.coffee.R
+import com.zhj.coffee.entity.BaseUrl
+import com.zhj.coffee.entity.CaffeineBean
+import com.zhj.coffee.webservice.CaffeineService
+import com.zhj.coffee.webservice.PeopleService
 import kotlinx.android.synthetic.main.activity_add_caffeine_record.*
+import kotlinx.android.synthetic.main.activity_login.*
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
+import java.sql.Time
+import java.sql.Timestamp
 import java.util.*
+import kotlin.concurrent.thread
 
 
 class AddCaffeineRecordActivity : AppCompatActivity() {
+
+    //初始化网络控件
+    lateinit var retrofit: Retrofit
+    lateinit var service: CaffeineService
 
     private val string_brand = arrayOf("星巴克", "瑞幸", "麦当劳", "雀巢", "其它")
     private val string_type = arrayOf(
@@ -39,9 +59,9 @@ class AddCaffeineRecordActivity : AppCompatActivity() {
         ), arrayOf(
             "大杯"
         ), arrayOf(
-            "大杯"
+            "正常"
         ), arrayOf(
-            "大杯"
+            "正常"
         )
     )
     private val string_percent = arrayOf(
@@ -54,7 +74,6 @@ class AddCaffeineRecordActivity : AppCompatActivity() {
 
         //获得当前时间
         val nowtime = Date()
-        var select_time = nowtime
         var select_year = nowtime.year + 1900
         var select_month = nowtime.month
         var select_date = nowtime.date
@@ -89,6 +108,18 @@ class AddCaffeineRecordActivity : AppCompatActivity() {
         spinner_percent.adapter = spinneradapter_percent
         spinner_percent.setSelection(0, true)
 
+        //初始化选择的数据
+        var select_brand_num = 0
+        var select_type_num = 0
+        var select_size_num = 0
+        var select_percent = 1.0
+        var select_caffeine = 0.0
+
+        var select_brand = string_brand[select_brand_num]
+        var select_type = string_type[select_brand_num][select_type_num]
+        var select_size = string_size[select_brand_num][select_size_num].dropLast(1)
+
+        //初始化brand下拉栏监听器
         spinner_brand.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -109,12 +140,78 @@ class AddCaffeineRecordActivity : AppCompatActivity() {
                     string_size[position]
                 )
                 spinner_size.adapter = spinneradapter_size
+
+                //修改选择的值
+                select_brand_num = position
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
         }
+
+        //初始化type下拉栏监听器
+        spinner_type.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                //修改选择的值
+                select_type_num = position
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+
+        //初始化size下拉栏监听器
+        spinner_size.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                //修改选择的值
+                select_size_num = position
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+
+        //初始化percent下拉栏监听器
+        spinner_percent.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                //修改选择的值
+                when (position) {
+                    0 -> select_percent = 1.0
+                    1 -> select_percent = 0.75
+                    2 -> select_percent = 0.67
+                    3 -> select_percent = 0.33
+                    4 -> select_percent = 0.25
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+
+        //定义网络控件
+        retrofit = Retrofit.Builder().baseUrl(BaseUrl.baseurl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        service = retrofit.create(CaffeineService::class.java)
 
         button_ModifyDate.setOnClickListener {
             DatePickerDialog(
@@ -137,12 +234,146 @@ class AddCaffeineRecordActivity : AppCompatActivity() {
         }
 
         button_add_record.setOnClickListener {
-            select_time.year = select_year
-            select_time.month = select_month
-            select_time.date = select_date
-            select_time.hours = select_hour
-            select_time.minutes = select_minute
+            //提取ID
+            val PREF_FILE_NAME = "user_info"
+            val User_ID = "user_id"
+            val pref = this.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
+            val user_id = pref.getString(User_ID, "").toString()
 
+            select_caffeine = when (select_brand_num) {
+                0 -> {//星巴克
+                    when (select_type_num) {
+                        0 -> {//美式
+                            when (select_size_num) {//中杯
+                                0 -> 150 * select_percent
+                                1 -> 225 * select_percent
+                                2 -> 300 * select_percent
+                                else -> 0.0
+                            }
+                        }
+                        1 -> {//拿铁
+                            when (select_size_num) {//中杯
+                                0 -> 75 * select_percent
+                                1 -> 150 * select_percent
+                                2 -> 225 * select_percent
+                                else -> 0.0
+                            }
+                        }
+                        2 -> {//摩卡
+                            when (select_size_num) {//中杯
+                                0 -> 90 * select_percent
+                                1 -> 175 * select_percent
+                                2 -> 185 * select_percent
+                                else -> 0.0
+                            }
+                        }
+                        3 -> {//馥芮白
+                            when (select_size_num) {//中杯
+                                0 -> 130 * select_percent
+                                1 -> 195 * select_percent
+                                2 -> 260 * select_percent
+                                else -> 0.0
+                            }
+                        }
+                        4 -> {//冷萃
+                            when (select_size_num) {//中杯
+                                0 -> 150 * select_percent
+                                1 -> 225 * select_percent
+                                2 -> 300 * select_percent
+                                else -> 0.0
+                            }
+                        }
+                        else -> 0.0
+                    }
+                }
+                1 -> {//瑞幸
+                    when (select_type_num) {
+                        0 -> 225 * select_percent//美式
+                        1 -> 150 * select_percent//拿铁
+                        2 -> 175 * select_percent//摩卡
+                        3 -> 190 * select_percent//澳瑞白
+                        4 -> 300 * select_percent//加浓美式
+                        else -> 0.0
+                    }
+                }
+                2 -> {//麦当劳
+                    when (select_type_num) {
+                        0 -> 125 * select_percent//美式
+                        1 -> 125 * select_percent//拿铁
+                        2 -> 140 * select_percent//摩卡
+                        3 -> 225 * select_percent//冰醇咖啡
+                        4 -> 125 * select_percent//卡布奇诺
+                        else -> 0.0
+                    }
+                }
+                3 -> {//雀巢
+                    when (select_type_num) {
+                        0 -> 70 * select_percent//醇品速溶
+                        1 -> 70 * select_percent//金牌速溶
+                        2 -> 50 * select_percent//1+2速溶
+                        else -> 0.0
+                    }
+                }
+                4 -> {//其它
+                    when (select_type_num) {
+                        0 -> 60 * select_percent//胶囊咖啡
+                        1 -> 50 * select_percent//可乐
+                        2 -> 105 * select_percent//红茶
+                        3 -> 120 * select_percent//功能饮料
+                        else -> 0.0
+                    }
+                }
+
+                else -> 0.0
+            }
+
+            select_brand = string_brand[select_brand_num]
+            select_type = string_type[select_brand_num][select_type_num]
+            select_size = string_size[select_brand_num][select_size_num].dropLast(1)
+
+            val select_time_timestamp =
+                select_year.toString() + "-" + String.format("%02d",select_month + 1) + "-" + String.format("%02d",select_date)+ "T" + String.format("%02d",select_hour) + ":" + String.format("%02d",select_minute) + ":" + String.format("%02d",nowtime.seconds)+".000+0800"
+            val caffeinebean = CaffeineBean(
+                user_id, select_time_timestamp, select_brand, select_type, select_size,
+                select_percent.toFloat(), select_caffeine.toFloat()
+            )
+
+            val msg =
+                select_year.toString() + "." + (select_month + 1).toString() + "." + select_date.toString() + " " + select_hour.toString() + ":" + select_minute.toString() + "\n" +
+                        "您选择了" + select_brand + "的一杯" + select_type + "，其杯型是：" + select_size + "杯，喝了" + select_percent.toString() + "杯，大约含有咖啡因" + String.format(
+                    "%.2f",
+                    select_caffeine
+                ) + "mg"
+
+            MaterialAlertDialogBuilder(this)
+                .setTitle("确定是以下信息吗？")
+                .setMessage(msg)
+                .setNeutralButton("取消") { dialog, which ->
+
+                }
+                .setPositiveButton("是") { dialog, which ->
+                    thread {
+                        val result = service.AddCaffeineRecord(caffeinebean)
+                        try {
+                            val response = result.execute()
+                            val isAdd = response.body()!!.string().toBoolean()
+                            if (isAdd) {//增添成功
+                                val intent = Intent(this, CenterActivity::class.java)
+                                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                this.startActivity(intent)
+                            } else {//增添失败
+                                Looper.prepare()
+                                Toast.makeText(this, "不能同一时间饮用两份饮品", Toast.LENGTH_LONG).show()
+                                Looper.loop()
+                            }
+                        } catch (e: IOException) {
+                            Looper.prepare()
+                            Toast.makeText(this, "网络错误，提交失败", Toast.LENGTH_LONG).show()
+                            Looper.loop()
+                        }
+                    }
+                }
+                .show()
         }
     }
 }

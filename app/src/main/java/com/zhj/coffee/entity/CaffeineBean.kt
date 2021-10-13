@@ -1,10 +1,10 @@
 package com.zhj.coffee.entity
 
-import java.util.*
+import java.sql.Timestamp
 
 class CaffeineBean(
-    var id:Int,
-    var time: Date,
+    var id: String,
+    var time: String,
     var brand: String,
     var type: String,
     var size: String,
