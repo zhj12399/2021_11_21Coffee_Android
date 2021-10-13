@@ -70,13 +70,25 @@
             android:id="@+id/textview_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="每日我们建议最多摄入400mg咖啡因（红色）\n最佳的入眠状态为咖啡因量低于100mg（橙色）"
+            android:text="每日我们建议最多摄入400mg咖啡因\n最佳的入眠状态为咖啡因量低于100mg"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.723" />
+
+        <TextView
+            android:id="@+id/textview_sleeptime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="您大约在 正在读取中 降至睡眠量"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.8" />
 
         <Button
             android:id="@+id/button_addcaffeinerecord"
