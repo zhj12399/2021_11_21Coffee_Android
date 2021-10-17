@@ -9,6 +9,9 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CaffeineService {
+    @POST("People/ExistPeople//{user_id}")
+    fun ExistPeople(@Path("user_id") user_id: String): Call<ResponseBody>
+
     @POST("Caffeine/getLastMonthRecord/{user_id}")
     fun GetLastMonthRecord(@Path("user_id") user_id: String): Call<ResponseBody>
 

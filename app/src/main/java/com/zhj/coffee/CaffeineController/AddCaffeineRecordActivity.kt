@@ -33,8 +33,10 @@ import kotlin.concurrent.thread
 class AddCaffeineRecordActivity : AppCompatActivity() {
 
     //初始化网络控件
-    lateinit var retrofit: Retrofit
-    lateinit var service: CaffeineService
+    lateinit var caffeine_retrofit: Retrofit
+    lateinit var caffeine_service: CaffeineService
+    lateinit var people_retrofit: Retrofit
+    lateinit var people_service: PeopleService
 
     private val string_brand = arrayOf("星巴克", "瑞幸", "麦当劳", "雀巢", "其它")
     private val string_type = arrayOf(
@@ -207,11 +209,15 @@ class AddCaffeineRecordActivity : AppCompatActivity() {
             }
         }
 
-        //定义网络控件
-        retrofit = Retrofit.Builder().baseUrl(BaseUrl.baseurl)
+        //初始化网络控件
+        caffeine_retrofit = Retrofit.Builder().baseUrl(BaseUrl.baseurl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-        service = retrofit.create(CaffeineService::class.java)
+        caffeine_service = caffeine_retrofit.create(CaffeineService::class.java)
+        people_retrofit = Retrofit.Builder().baseUrl(BaseUrl.baseurl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        people_service = people_retrofit.create(PeopleService::class.java)
 
         button_ModifyDate.setOnClickListener {
             DatePickerDialog(
@@ -233,12 +239,38 @@ class AddCaffeineRecordActivity : AppCompatActivity() {
             ).show()
         }
 
+        //提取ID
+        val PREF_FILE_NAME = "user_info"
+        val User_ID = "user_id"
+        val pref = this.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
+        val user_id = pref.getString(User_ID, "").toString()
+
         button_add_record.setOnClickListener {
-            //提取ID
-            val PREF_FILE_NAME = "user_info"
-            val User_ID = "user_id"
-            val pref = this.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
-            val user_id = pref.getString(User_ID, "").toString()
+            thread {
+                val result_exist_people = people_service.ExistPeople(user_id)
+                try {
+                    val response_exist_people = result_exist_people.execute()
+                    if (!response_exist_people.body()!!.string().toBoolean()) {//没这个人直接下线
+                        //将下线信息记录
+                        val PREF_FILE_NAME = "user_info"
+                        val User_ID = "user_id"
+                        val Is_Login = "is_login"
+
+                        val pref = this.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
+                        val editor = pref.edit()
+                        editor.putBoolean(Is_Login, false)
+                        editor.putString(User_ID, "")
+                        editor.apply()
+
+                        Toast.makeText(this, "请您重新登录", Toast.LENGTH_LONG).show()
+                        val intent = Intent(this, LoginActivity::class.java)
+                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        this.startActivity(intent)
+                    }
+                } catch (e: IOException) {
+                    Toast.makeText(this, "网络无法连接", Toast.LENGTH_LONG).show()
+                }
+            }
 
             select_caffeine = when (select_brand_num) {
                 0 -> {//星巴克
@@ -353,7 +385,7 @@ class AddCaffeineRecordActivity : AppCompatActivity() {
                 }
                 .setPositiveButton("是") { dialog, which ->
                     thread {
-                        val result = service.AddCaffeineRecord(caffeinebean)
+                        val result = caffeine_service.AddCaffeineRecord(caffeinebean)
                         try {
                             val response = result.execute()
                             val isAdd = response.body()!!.string().toBoolean()

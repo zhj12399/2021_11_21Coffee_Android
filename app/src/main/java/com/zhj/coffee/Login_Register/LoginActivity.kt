@@ -61,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
                             Looper.loop()
                         } else {//密码错误
                             Looper.prepare()
-                            Toast.makeText(this, "密码错误", Toast.LENGTH_LONG).show()
+                            Toast.makeText(this, "账户或密码错误", Toast.LENGTH_LONG).show()
                             Looper.loop()
 
                             edittext_userpassword.setText("")
