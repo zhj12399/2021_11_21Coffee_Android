@@ -9,7 +9,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface PeopleService {
-    @POST("People/ExistPeople//{user_id}")
+    @POST("People/ExistPeople/{user_id}")
     fun ExistPeople(@Path("user_id") user_id: String): Call<ResponseBody>
 
     @POST("People/JudgePassword")
