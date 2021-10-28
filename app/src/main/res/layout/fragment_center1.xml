@@ -79,6 +79,19 @@
             app:layout_constraintVertical_bias="0.723" />
 
         <TextView
+            android:id="@+id/textview_starttime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="您上次引用饮品的时间是：正在读取中"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.787" />
+
+        <TextView
             android:id="@+id/textview_sleeptime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -86,9 +99,10 @@
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.8" />
+            app:layout_constraintVertical_bias="0.851" />
 
         <Button
             android:id="@+id/button_addcaffeinerecord"
@@ -100,7 +114,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.92" />
+            app:layout_constraintVertical_bias="0.958" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

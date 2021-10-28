@@ -66,6 +66,7 @@ class CenterFragment1 : Fragment() {
          val textview_todaytext2 = view?.findViewById<TextView>(R.id.textview_todaytext2)
          val textview_todaytext3 = view?.findViewById<TextView>(R.id.textview_todaytext3)
          val surfaceview = view?.findViewById<SurfaceView>(R.id.surfaceview)
+         val textview_starttime = view?.findViewById<TextView>(R.id.textview_starttime)
          val textview_sleeptime = view?.findViewById<TextView>(R.id.textview_sleeptime)
 
 
@@ -164,6 +165,7 @@ class CenterFragment1 : Fragment() {
 
                      //上一次摄入的时间
                      val start_time = caffeinenow.getTimestamp("time").time
+                     val start_time_date = Date(start_time)
                      //上一次摄入的咖啡因
                      val start_caffeine = caffeinenow.getFloat("caffeine")
                      //上一次到目前间隔的时间
@@ -195,19 +197,59 @@ class CenterFragment1 : Fragment() {
                          if (start_caffeine < 100) {//此时已经低于睡眠值了
                              textview_sleeptime?.setText("此时已经低于睡眠值了,可以入睡啦")
                          } else {
-                             textview_sleeptime?.setText(
-                                 "您大约在" + (sleeptime.year + 1900).toString() + "-" + String.format(
-                                     "%02d",
-                                     sleeptime.month + 1
-                                 ) + "-" + String.format(
-                                     "%02d",
-                                     sleeptime.date
-                                 ) + " " + String.format(
-                                     "%02d",
-                                     sleeptime.hours
-                                 ) + ":" + String.format("%02d", sleeptime.minutes) + "降至睡眠量"
-                             )
+                             if(now_caffeine <100){
+                                 textview_sleeptime?.setText(
+                                     "此时已经低于睡眠值了,可以入睡啦\n您大约已在" + (sleeptime.year + 1900).toString() + "-" + String.format(
+                                         "%02d",
+                                         sleeptime.month + 1
+                                     ) + "-" + String.format(
+                                         "%02d",
+                                         sleeptime.date
+                                     ) + " " + String.format(
+                                         "%02d",
+                                         sleeptime.hours
+                                     ) + ":" + String.format("%02d", sleeptime.minutes) + "降至睡眠量"
+                                 )
+                             }
+                             else{
+                                 textview_sleeptime?.setText(
+                                     "您大约将在" + (sleeptime.year + 1900).toString() + "-" + String.format(
+                                         "%02d",
+                                         sleeptime.month + 1
+                                     ) + "-" + String.format(
+                                         "%02d",
+                                         sleeptime.date
+                                     ) + " " + String.format(
+                                         "%02d",
+                                         sleeptime.hours
+                                     ) + ":" + String.format("%02d", sleeptime.minutes) + "降至睡眠量"
+                                 )
+                             }
+                         }
 
+                         if(now_caffeine <1){
+                             textview_starttime?.setText("您很久没喝咖啡了\n您上一次饮用饮品的时间是："+(start_time_date.year + 1900).toString() + "-" + String.format(
+                                 "%02d",
+                                 start_time_date.month + 1
+                             ) + "-" + String.format(
+                                 "%02d",
+                                 start_time_date.date
+                             ) + " " + String.format(
+                                 "%02d",
+                                 start_time_date.hours
+                             ) + ":" + String.format("%02d", start_time_date.minutes))
+                         }
+                         else{
+                             textview_starttime?.setText("您上一次饮用饮品的时间是："+(start_time_date.year + 1900).toString() + "-" + String.format(
+                                 "%02d",
+                                 start_time_date.month + 1
+                             ) + "-" + String.format(
+                                 "%02d",
+                                 start_time_date.date
+                             ) + " " + String.format(
+                                 "%02d",
+                                 start_time_date.hours
+                             ) + ":" + String.format("%02d", start_time_date.minutes))
                          }
                      }
                  }
