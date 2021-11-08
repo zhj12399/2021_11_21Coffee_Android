@@ -153,11 +153,11 @@ class CenterFragment2 : Fragment(), CaffeineListAdapter.CaffeineListClickListene
 
     override fun onClickItem(position: Int) {
     currentIndex = position
-    MaterialAlertDialogBuilder(activity!!)
+    MaterialAlertDialogBuilder(requireActivity())
         .setTitle("详情")
         .setMessage(
             CaffeineList[currentIndex].caffeine.brand + " " + CaffeineList[currentIndex].caffeine.type + " " +
-                    CaffeineList[currentIndex].caffeine.size + "杯\n饮用了" +CaffeineList[currentIndex].caffeine.percent +
+                    CaffeineList[currentIndex].caffeine.size + "\n饮用了" +CaffeineList[currentIndex].caffeine.percent +
                     "杯\n共计咖啡因"+ CaffeineList[currentIndex].caffeine.caffeine+"mg"
         )
         .setPositiveButton("确定") { dialog, which ->

@@ -61,7 +61,7 @@ class CenterFragment4 : Fragment() {
         }
 
         button_delete.setOnClickListener {
-            MaterialAlertDialogBuilder(activity!!)
+            MaterialAlertDialogBuilder(requireActivity())
                 .setTitle("确定删除账户码？")
                 .setMessage("删除后您的账号将不会被保留\n其它信息也将会被删除")
                 .setNeutralButton("取消") { dialog, which ->
@@ -99,7 +99,7 @@ class CenterFragment4 : Fragment() {
         }
 
         button_logoff.setOnClickListener {
-            MaterialAlertDialogBuilder(activity!!)
+            MaterialAlertDialogBuilder(requireActivity())
                 .setTitle("确定注销账户码？")
                 .setMessage("退出后您的账号仍会保留\n其它信息也不会被删除")
                 .setNeutralButton("取消") { dialog, which ->
@@ -126,14 +126,14 @@ class CenterFragment4 : Fragment() {
         }
 
         button_about.setOnClickListener {
-            MaterialAlertDialogBuilder(activity!!)
+            MaterialAlertDialogBuilder(requireActivity())
                 .setTitle("关于咖啡世界")
                 .setMessage(
                     "一款可记录咖啡因的网站\n所有数据均来自于公布数据\n" +
                             "由于个人体质等条件不同，数据仅供参考\n" +
                             "作者:zhj12399\n" +
                             "作者邮箱:zhj727534681@163.com\n" +
-                            "网站地址:zhj12399.cn:9000"
+                            "网站地址:https://zhj12399.cn:9000"
                 )
                 .setPositiveButton("确定") { dialog, which ->
                 }

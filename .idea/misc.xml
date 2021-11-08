@@ -4,7 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/activity_add_caffeine_record.xml" value="0.21732522796352582" />
+        <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/activity_find_password.xml" value="0.21603260869565216" />
+        <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/activity_login.xml" value="0.21603260869565216" />
+        <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/activity_main.xml" value="0.32864583333333336" />
+        <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/activity_modify_name.xml" value="0.32864583333333336" />
         <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/fragment_center1.xml" value="0.2383485309017224" />
+        <entry key="..\:/CoffeeAndroid/app/src/main/res/layout/fragment_center4.xml" value="0.32864583333333336" />
       </map>
     </option>
   </component>

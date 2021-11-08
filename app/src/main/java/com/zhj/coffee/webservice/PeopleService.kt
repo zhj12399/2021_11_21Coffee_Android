@@ -35,4 +35,9 @@ interface PeopleService {
 
     @POST("People/deletePeopleById")
     fun DeletePeopleById(@Query("id") user_id: String): Call<ResponseBody>
+
+    @POST("People/SentPasswordMail")
+    fun SentPasswordMail(
+        @Query("username") username:String
+    ):Call<ResponseBody>
 }

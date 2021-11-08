@@ -22,7 +22,7 @@ class CaffeineListViewHolder(caffeineListItemView: View) :
         textview_title.setText(SimpleDateFormat("yyyy-MM-dd HH:mm").format(caffeineItem.caffeine.time)
                 + " 饮用了 " + caffeineItem.caffeine.type)
 
-        textview_message.setText(caffeineItem.caffeine.brand+" "+caffeineItem.caffeine.size + "杯:咖啡因含量:" +caffeineItem.caffeine.caffeine+"mg")
+        textview_message.setText(caffeineItem.caffeine.brand+" "+caffeineItem.caffeine.size + ",咖啡因含量:" +caffeineItem.caffeine.caffeine+"mg")
         if(caffeineItem.isSelected){
             itemView.setBackgroundColor(Color.CYAN)
         } else {

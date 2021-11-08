@@ -81,5 +81,10 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, RegisterActivity::class.java)
             this.startActivity(intent)
         }
+
+        button_FindPassword.setOnClickListener {
+            val intent = Intent(this, FindPasswordActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
